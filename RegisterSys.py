@@ -1,6 +1,6 @@
 import datetime
 
-def display_menu():
+def menu():
     print("\n" + "="*50)
     print("UNIVERSITY STUDY REGISTER SYSTEM")
     print("="*50)
@@ -12,16 +12,16 @@ def display_menu():
     print("6. Exit")
     print("="*50)
 
-def read_students():
+def readStudents():
     with open('students.txt', 'r') as f:
         lines = [line.strip() for line in f if line.strip()]
         return [{'id': int(p[0]), 'last_name': p[1], 'first_name': p[2], 
                 'second_name': p[3], 'email': p[4], 'start_year': int(p[5]), 'program': p[6]} 
                 for p in [line.split(',') for line in lines]]
 
-def add_student():
+def addStudent():
     print("\n=== Add New Student ===")
-    stds = read_students()
+    stds = readStudents()
 
     while True:     #sid
         try:
@@ -54,35 +54,35 @@ def add_student():
     
     stds.append({'id': sid, 'last_name': ln, 'first_name': fn,'second_name': sn, 'email': em, 'start_year': yr, 'program': prog})
     
-    write_students(stds)
+    writeStudents(stds)
     print(f"\nStudent {fn} {ln} (ID: {sid}) added successfully!")
     
-def read_courses():
+def readCourses():
     with open('courses.txt', 'r') as f:
         lines = [line.strip() for line in f if line.strip()]
         return [{'code': p[0], 'name': p[1], 'credits': int(p[2]), 'teachers': p[3:]} 
                 for p in [line.split(',') for line in lines]]
 
 
-def read_passed():
+def readPassed():
     with open('passed.txt', 'r') as f:
         lines = [line.strip() for line in f if line.strip()]
         return [{'course_code': p[0], 'student_id': int(p[1]), 'date': p[2], 'grade': int(p[3])} 
                 for p in [line.split(',') for line in lines]]
 
-def write_students(students):
+def writeStudents(students):
     with open('students.txt', 'w') as f:
         for s in students:
             f.write(f"{s['id']},{s['last_name']},{s['first_name']},{s['second_name']},{s['email']},{s['start_year']},{s['program']}\n")
 
-def write_passed(passed):
+def writePassed(passed):
     with open('passed.txt', 'w') as f:
         for r in passed:
             f.write(f"{r['course_code']},{r['student_id']},{r['date']},{r['grade']}\n")
 
-def search_student():
+def searchStudent():
     print("\n=== Search Student ===")
-    stds = read_students()
+    stds = readStudents()
     term = input("Enter student ID or name to search: ")
     
     try:
@@ -104,9 +104,9 @@ def search_student():
             print(f"Start Year: {s['start_year']}")
             print(f"Program: {s['program']}")
 
-def search_course():
+def searchCourse():
     print("\n=== Search Course ===")
-    crs = read_courses()
+    crs = readCourses()
     term = input("Enter course code or name to search: ").lower()
     res = [c for c in crs if term in c['code'].lower() or term in c['name'].lower()]
     
@@ -120,11 +120,11 @@ def search_course():
             print(f"Credits: {c['credits']}")
             print(f"Teacher(s): {', '.join(c['teachers'])}")
 
-def add_course_completion():
+def courseCompletion():
     print("\n=== Add Course Completion ===")
-    stds = read_students()
-    crs = read_courses()
-    psd = read_passed()
+    stds = readStudents()
+    crs = readCourses()
+    psd = readPassed()
 
     cc = input("Enter course code: ").upper()
     if not any(c['code'] == cc for c in crs):
@@ -170,13 +170,13 @@ def add_course_completion():
         psd.append({'course_code': cc, 'student_id': sid, 'date': dt, 'grade': gr})
         print(f"\nCourse completion added: {cc} for student {sid} with grade {gr}")
     
-    write_passed(psd)
+    writePassed(psd)
 
-def show_student_record():
+def record():
     print("\n=== Show Student's Record ===")
-    stds = read_students()
-    crs = read_courses()
-    psd = read_passed()
+    stds = readStudents()
+    crs = readCourses()
+    psd = readPassed()
     
     try:
         sid = int(input("Enter student ID: "))
@@ -220,19 +220,19 @@ def show_student_record():
 
 def main():
     while True:
-        display_menu()
+        menu()
         ch = input("Enter your choice (1-6): ")
         
         if ch == '1':
-            add_student()
+            addStudent()
         elif ch == '2':
-            search_student()
+            searchStudent()
         elif ch == '3':
-            search_course()
+            searchCourse()
         elif ch == '4':
-            add_course_completion()
+            courseCompletion()
         elif ch == '5':
-            show_student_record()
+            record()
         elif ch == '6':
             print("\nThank you for using our system!")
             break
