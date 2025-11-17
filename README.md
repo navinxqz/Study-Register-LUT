@@ -170,10 +170,6 @@ The system ensures:
 
 This is an academic project. Feel free to fork and experiment!
 
-## 📄 License
-
-This project is available under the MIT License.
-
 ## 👨‍💻 Author
 
 Developed as part of university coursework focusing on file handling, data structures, and command-line applications in Python.
