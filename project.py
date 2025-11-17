@@ -70,7 +70,7 @@ def addStudent():
         prog = input("Enter program (CE/EE/ET/ME/SE): ").upper()
         if prog in progs:
             break
-        print(f"Error: Program must be one of {', '.join(progs)}")
+        print(f"Error: Program must be one of CE, EE, ET, ME, SE")
     
     stds.append({'id': sid, 'last_name': ln, 'first_name': fn,'second_name': sn, 'email': em, 'start_year': yr, 'program': prog})
     
@@ -180,7 +180,12 @@ def searchCourse():
             print(f"\nCode: {c['code']}")
             print(f"Name: {c['name']}")
             print(f"Credits: {c['credits']}")
-            print(f"Teacher(s): {', '.join(c['teachers'])}")
+            print(f"Teacher(s): ", end="")
+        for i in range(len(c['teachers'])):
+                if i > 0:
+                    print(", ", end="")
+                print(c['teachers'][i], end="")
+        print()
 
 def courseCompletion():
     print("\n=== Add Course Completion ===")
