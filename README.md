@@ -64,7 +64,7 @@ python RegisterSys.py
 ```
 university-register-system/
 │
-├── study_register.py      # Main application file
+├── RegisterSys.py      # Main application file
 ├── courses.txt             # Course catalog database
 ├── students.txt            # Student information database
 ├── passed.txt              # Grade records database
