@@ -44,8 +44,7 @@ The University Study Register System is a lightweight, file-based database manag
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/university-register-system.git
-cd university-register-system
+git clone https://github.com/navinxqz/Study-Register-LUT.git
 ```
 
 2. Ensure data files are present
@@ -57,7 +56,7 @@ passed.txt
 
 3. Run the application
 ```bash
-python study_register.py
+python RegisterSys.py
 ```
 
 ## 📁 File Structure
