@@ -1,0 +1,5 @@
+This project was completed independently without the use of AI assistance tools. All code was written manually using:
+- VS Code (IDE)
+- Git Bash (Version Control)
+- Python Documentation for References
+- Personal problem-solving and debugging skills
