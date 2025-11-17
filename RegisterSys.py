@@ -12,345 +12,229 @@ def display_menu():
     print("6. Exit")
     print("="*50)
 
-def read_courses():
-    """Read and return courses data from courses.txt"""
-    courses = []
-    with open('courses.txt', 'r') as file:
-        for line in file:
-            line = line.strip()
-            if line:
-                parts = line.split(',')
-                course_code = parts[0]
-                course_name = parts[1]
-                credits = int(parts[2])
-                teachers = parts[3:]
-                courses.append({
-                    'code': course_code,
-                    'name': course_name,
-                    'credits': credits,
-                    'teachers': teachers
-                })
-    return courses
-
 def read_students():
-    """Read and return students data from students.txt"""
-    students = []
-    with open('students.txt', 'r') as file:
-        for line in file:
-            line = line.strip()
-            if line:
-                parts = line.split(',')
-                student_id = int(parts[0])
-                last_name = parts[1]
-                first_name = parts[2]
-                second_name = parts[3]
-                email = parts[4]
-                start_year = int(parts[5])
-                program = parts[6]
-                students.append({
-                    'id': student_id,
-                    'last_name': last_name,
-                    'first_name': first_name,
-                    'second_name': second_name,
-                    'email': email,
-                    'start_year': start_year,
-                    'program': program
-                })
-    return students
-
-def read_passed():
-    """Read and return passed courses data from passed.txt"""
-    passed = []
-    with open('passed.txt', 'r') as file:
-        for line in file:
-            line = line.strip()
-            if line:
-                parts = line.split(',')
-                course_code = parts[0]
-                student_id = int(parts[1])
-                date = parts[2]
-                grade = int(parts[3])
-                passed.append({
-                    'course_code': course_code,
-                    'student_id': student_id,
-                    'date': date,
-                    'grade': grade
-                })
-    return passed
-
-def write_students(students):
-    """Write students data to students.txt"""
-    with open('students.txt', 'w') as file:
-        for student in students:
-            line = f"{student['id']},{student['last_name']},{student['first_name']},{student['second_name']},{student['email']},{student['start_year']},{student['program']}\n"
-            file.write(line)
-
-def write_passed(passed):
-    """Write passed courses data to passed.txt"""
-    with open('passed.txt', 'w') as file:
-        for record in passed:
-            line = f"{record['course_code']},{record['student_id']},{record['date']},{record['grade']}\n"
-            file.write(line)
+    with open('students.txt', 'r') as f:
+        lines = [line.strip() for line in f if line.strip()]
+        return [{'id': int(p[0]), 'last_name': p[1], 'first_name': p[2], 
+                'second_name': p[3], 'email': p[4], 'start_year': int(p[5]), 'program': p[6]} 
+                for p in [line.split(',') for line in lines]]
 
 def add_student():
-    """Add a new student to the system"""
     print("\n=== Add New Student ===")
-    students = read_students()
-    
-    # Get student ID
-    while True:
+    stds = read_students()
+
+    while True:     #sid
         try:
-            student_id = int(input("Enter student ID: "))
-            # Check if ID already exists
-            if any(s['id'] == student_id for s in students):
+            sid = int(input("Enter student ID: "))
+            if any(s['id'] == sid for s in stds):
                 print("Error: Student ID already exists!")
                 continue
             break
         except ValueError:
             print("Error: Please enter a valid integer for student ID")
     
-    # Get student information
-    last_name = input("Enter last name: ")
-    first_name = input("Enter first name: ")
-    second_name = input("Enter second name (press Enter if none): ")
-    email = input("Enter email: ")
+    ln = input("Enter last name: ")
+    fn = input("Enter first name: ")
+    sn = input("Enter second name (press Enter if none): ")
+    em = input("Enter email: ")
     
     while True:
         try:
-            start_year = int(input("Enter starting year: "))
+            yr = int(input("Enter starting year: "))
             break
         except ValueError:
             print("Error: Please enter a valid year")
     
-    # Get program
-    valid_programs = ['CE', 'EE', 'ET', 'ME', 'SE']
+    progs = ['CE', 'EE', 'ET', 'ME', 'SE']
     while True:
-        program = input("Enter program (CE/EE/ET/ME/SE): ").upper()
-        if program in valid_programs:
+        prog = input("Enter program (CE/EE/ET/ME/SE): ").upper()
+        if prog in progs:
             break
-        print(f"Error: Program must be one of {', '.join(valid_programs)}")
+        print(f"Error: Program must be one of {', '.join(progs)}")
     
-    # Add new student
-    students.append({
-        'id': student_id,
-        'last_name': last_name,
-        'first_name': first_name,
-        'second_name': second_name,
-        'email': email,
-        'start_year': start_year,
-        'program': program
-    })
+    stds.append({'id': sid, 'last_name': ln, 'first_name': fn,'second_name': sn, 'email': em, 'start_year': yr, 'program': prog})
     
-    write_students(students)
-    print(f"\nStudent {first_name} {last_name} (ID: {student_id}) added successfully!")
+    write_students(stds)
+    print(f"\nStudent {fn} {ln} (ID: {sid}) added successfully!")
+    
+def read_courses():
+    with open('courses.txt', 'r') as f:
+        lines = [line.strip() for line in f if line.strip()]
+        return [{'code': p[0], 'name': p[1], 'credits': int(p[2]), 'teachers': p[3:]} 
+                for p in [line.split(',') for line in lines]]
+
+
+def read_passed():
+    with open('passed.txt', 'r') as f:
+        lines = [line.strip() for line in f if line.strip()]
+        return [{'course_code': p[0], 'student_id': int(p[1]), 'date': p[2], 'grade': int(p[3])} 
+                for p in [line.split(',') for line in lines]]
+
+def write_students(students):
+    with open('students.txt', 'w') as f:
+        for s in students:
+            f.write(f"{s['id']},{s['last_name']},{s['first_name']},{s['second_name']},{s['email']},{s['start_year']},{s['program']}\n")
+
+def write_passed(passed):
+    with open('passed.txt', 'w') as f:
+        for r in passed:
+            f.write(f"{r['course_code']},{r['student_id']},{r['date']},{r['grade']}\n")
 
 def search_student():
-    """Search for a student by ID or name"""
     print("\n=== Search Student ===")
-    students = read_students()
+    stds = read_students()
+    term = input("Enter student ID or name to search: ")
     
-    search_term = input("Enter student ID or name to search: ")
-    
-    results = []
-    
-    # Check if search term is a number (ID search)
     try:
-        search_id = int(search_term)
-        results = [s for s in students if s['id'] == search_id]
+        sid = int(term)
+        res = [s for s in stds if s['id'] == sid]
     except ValueError:
-        # Name search
-        search_term_lower = search_term.lower()
-        results = [s for s in students if 
-                   search_term_lower in s['first_name'].lower() or 
-                   search_term_lower in s['last_name'].lower() or
-                   search_term_lower in s['second_name'].lower()]
+        t = term.lower()
+        res = [s for s in stds if t in s['first_name'].lower() or t in s['last_name'].lower() or t in s['second_name'].lower()] #lc
     
-    if not results:
+    if not res:
         print("No students found.")
     else:
-        print(f"\nFound {len(results)} student(s):")
-        for student in results:
-            full_name = f"{student['first_name']} {student['second_name']} {student['last_name']}" if student['second_name'] else f"{student['first_name']} {student['last_name']}"
-            print(f"\nID: {student['id']}")
-            print(f"Name: {full_name}")
-            print(f"Email: {student['email']}")
-            print(f"Start Year: {student['start_year']}")
-            print(f"Program: {student['program']}")
+        print(f"\nFound {len(res)} student(s):")
+        for s in res:
+            nm = f"{s['first_name']} {s['second_name']} {s['last_name']}" if s['second_name'] else f"{s['first_name']} {s['last_name']}"
+            print(f"\nID: {s['id']}")
+            print(f"Name: {nm}")
+            print(f"Email: {s['email']}")
+            print(f"Start Year: {s['start_year']}")
+            print(f"Program: {s['program']}")
 
 def search_course():
-    """Search for a course by code or name"""
     print("\n=== Search Course ===")
-    courses = read_courses()
+    crs = read_courses()
+    term = input("Enter course code or name to search: ").lower()
+    res = [c for c in crs if term in c['code'].lower() or term in c['name'].lower()]
     
-    search_term = input("Enter course code or name to search: ").lower()
-    
-    results = [c for c in courses if 
-               search_term in c['code'].lower() or 
-               search_term in c['name'].lower()]
-    
-    if not results:
+    if not res:
         print("No courses found.")
     else:
-        print(f"\nFound {len(results)} course(s):")
-        for course in results:
-            print(f"\nCode: {course['code']}")
-            print(f"Name: {course['name']}")
-            print(f"Credits: {course['credits']}")
-            print(f"Teacher(s): {', '.join(course['teachers'])}")
+        print(f"\nFound {len(res)} course(s):")
+        for c in res:
+            print(f"\nCode: {c['code']}")
+            print(f"Name: {c['name']}")
+            print(f"Credits: {c['credits']}")
+            print(f"Teacher(s): {', '.join(c['teachers'])}")
 
 def add_course_completion():
-    """Add or update a course completion record"""
     print("\n=== Add Course Completion ===")
-    
-    students = read_students()
-    courses = read_courses()
-    passed = read_passed()
-    
-    # Get course code
-    course_code = input("Enter course code: ").upper()
-    course_exists = any(c['code'] == course_code for c in courses)
-    if not course_exists:
+    stds = read_students()
+    crs = read_courses()
+    psd = read_passed()
+
+    cc = input("Enter course code: ").upper()
+    if not any(c['code'] == cc for c in crs):
         print("Error: Course code not found!")
         return
     
-    # Get student ID
     try:
-        student_id = int(input("Enter student ID: "))
+        sid = int(input("Enter student ID: "))
     except ValueError:
         print("Error: Invalid student ID")
         return
     
-    student_exists = any(s['id'] == student_id for s in students)
-    if not student_exists:
+    if not any(s['id'] == sid for s in stds):
         print("Error: Student ID not found!")
         return
     
-    # Get date
-    date_str = input("Enter completion date (YYYY-MM-DD): ")
+    dt = input("Enter completion date (YYYY-MM-DD): ")
     try:
-        datetime.datetime.strptime(date_str, '%Y-%m-%d')
+        datetime.datetime.strptime(dt, '%Y-%m-%d')
     except ValueError:
         print("Error: Invalid date format!")
         return
     
-    # Get grade
     try:
-        grade = int(input("Enter grade (1-5): "))
-        if grade < 1 or grade > 5:
+        gr = int(input("Enter grade (1-5): "))
+        if gr < 1 or gr > 5:
             print("Error: Grade must be between 1 and 5")
             return
     except ValueError:
         print("Error: Invalid grade")
         return
     
-    # Check if student already has a record for this course
-    existing_record = None
-    for record in passed:
-        if record['course_code'] == course_code and record['student_id'] == student_id:
-            existing_record = record
-            break
+    rec = next((r for r in psd if r['course_code'] == cc and r['student_id'] == sid), None)
     
-    if existing_record:
-        # Update if new grade is better
-        if grade > existing_record['grade']:
-            existing_record['grade'] = grade
-            existing_record['date'] = date_str
-            print(f"\nGrade updated to {grade} for course {course_code}")
+    if rec:
+        if gr > rec['grade']:
+            rec['grade'] = gr
+            rec['date'] = dt
+            print(f"\nGrade updated to {gr} for course {cc}")
         else:
-            print(f"\nExisting grade ({existing_record['grade']}) is better or equal. No update made.")
+            print(f"\nExisting grade ({rec['grade']}) is better or equal. No update made.")
     else:
-        # Add new record
-        passed.append({
-            'course_code': course_code,
-            'student_id': student_id,
-            'date': date_str,
-            'grade': grade
-        })
-        print(f"\nCourse completion added: {course_code} for student {student_id} with grade {grade}")
+        psd.append({'course_code': cc, 'student_id': sid, 'date': dt, 'grade': gr})
+        print(f"\nCourse completion added: {cc} for student {sid} with grade {gr}")
     
-    write_passed(passed)
+    write_passed(psd)
 
 def show_student_record():
-    """Show all courses passed by a student"""
     print("\n=== Show Student's Record ===")
-    
-    students = read_students()
-    courses = read_courses()
-    passed = read_passed()
+    stds = read_students()
+    crs = read_courses()
+    psd = read_passed()
     
     try:
-        student_id = int(input("Enter student ID: "))
+        sid = int(input("Enter student ID: "))
     except ValueError:
         print("Error: Invalid student ID")
         return
     
-    # Find student
-    student = None
-    for s in students:
-        if s['id'] == student_id:
-            student = s
-            break
+    std = next((s for s in stds if s['id'] == sid), None)
     
-    if not student:
+    if not std:
         print("Error: Student not found!")
         return
     
-    # Display student info
-    full_name = f"{student['first_name']} {student['second_name']} {student['last_name']}" if student['second_name'] else f"{student['first_name']} {student['last_name']}"
+    nm = f"{std['first_name']} {std['second_name']} {std['last_name']}" if std['second_name'] else f"{std['first_name']} {std['last_name']}"
     print(f"\n{'='*60}")
-    print(f"Student: {full_name}")
-    print(f"ID: {student['id']}")
-    print(f"Email: {student['email']}")
-    print(f"Program: {student['program']}")
-    print(f"Start Year: {student['start_year']}")
+    print(f"Student: {nm}")
+    print(f"ID: {std['id']}")
+    print(f"Email: {std['email']}")
+    print(f"Program: {std['program']}")
+    print(f"Start Year: {std['start_year']}")
     print(f"{'='*60}")
     
-    # Get student's passed courses
-    student_records = [p for p in passed if p['student_id'] == student_id]
+    recs = [p for p in psd if p['student_id'] == sid]   #using lc
     
-    if not student_records:
+    if not recs:
         print("\nNo courses completed yet.")
     else:
-        print(f"\nCompleted Courses ({len(student_records)}):")
+        print(f"\nCompleted Courses ({len(recs)}):")
         print(f"{'Course Code':<12} {'Course Name':<40} {'Credits':<8} {'Grade':<6} {'Date'}")
         print("-" * 90)
         
-        total_credits = 0
-        for record in student_records:
-            # Find course details
-            course = None
-            for c in courses:
-                if c['code'] == record['course_code']:
-                    course = c
-                    break
-            
-            if course:
-                print(f"{course['code']:<12} {course['name']:<40} {course['credits']:<8} {record['grade']:<6} {record['date']}")
-                total_credits += course['credits']
+        tot = 0
+        for r in recs:
+            c = next((x for x in crs if x['code'] == r['course_code']), None)
+            if c:
+                print(f"{c['code']:<12} {c['name']:<40} {c['credits']:<8} {r['grade']:<6} {r['date']}")
+                tot += c['credits']
         
         print("-" * 90)
-        print(f"Total Credits: {total_credits}")
-
+        print(f"Total Credits: {tot}")
 
 def main():
-    """Main program loop"""
     while True:
         display_menu()
-        choice = input("Enter your choice (1-6): ")
+        ch = input("Enter your choice (1-6): ")
         
-        if choice == '1':
+        if ch == '1':
             add_student()
-        elif choice == '2':
+        elif ch == '2':
             search_student()
-        elif choice == '3':
+        elif ch == '3':
             search_course()
-        elif choice == '4':
+        elif ch == '4':
             add_course_completion()
-        elif choice == '5':
+        elif ch == '5':
             show_student_record()
-        elif choice == '6':
-            print("\nThank you for using the University Study Register System!")
-            print("Goodbye!")
+        elif ch == '6':
+            print("\nThank you for using our system!")
             break
         else:
             print("\nInvalid choice! Please enter a number between 1 and 6.")

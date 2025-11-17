@@ -18,3 +18,4 @@
 82634,Brown,Joshua,Charlie,joshua.brown@lut.fi,2022,SE
 72516,Smith,Olivia,,olivia.smith@lut.fi,2025,ET
 61128,Miller,Daniel,,daniel.miller@lut.fi,2024,ME
+98300,Navin,Nawshin,,xyz@lut.fi,2025,CE
